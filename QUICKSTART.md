@@ -39,12 +39,9 @@ cd js_Vimeo_Video_Uploader
 # Start a local server (choose one):
 
 # Python 3
-python -m http.server 8000
+python3 -m http.server 8000
 
-# Python 2
-python -m SimpleHTTPServer 8000
-
-# Node.js (requires http-server: npm install -g http-server)
+# Node.js (install first: npm install -g http-server)
 http-server -p 8000
 
 # PHP

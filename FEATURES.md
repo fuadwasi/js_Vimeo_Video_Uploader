@@ -2,7 +2,16 @@
 
 ## Application Screenshot
 
+The application features a modern, responsive interface with:
+- Gradient header design
+- Clean API configuration section
+- Intuitive drag-and-drop upload area
+- Professional data table for video management
+- Mobile-responsive layout
+
 ![Vimeo Video Uploader Interface](https://github.com/user-attachments/assets/ffbda62e-f5b0-44f0-a56a-f79c00a18cdd)
+
+> Screenshot showing the complete interface with all major sections visible
 
 ## Complete Feature List
 
