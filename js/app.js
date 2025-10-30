@@ -102,6 +102,10 @@ const App = (function() {
                 closeModal();
             }
         });
+
+        // Export buttons
+        $('#exportExcel').on('click', exportToCSV);
+        $('#exportJSON').on('click', exportToJSON);
     }
 
     /**
@@ -241,9 +245,14 @@ const App = (function() {
      * Create URL cell with copy button
      */
     function createUrlCell(url, label) {
+        // Make Vimeo URL clickable, keep Embed URL as text
+        const urlContent = label === 'Vimeo URL' 
+            ? `<a href="${url}" target="_blank" rel="noopener noreferrer" class="url-link">${url}</a>`
+            : `<span class="url-text">${url}</span>`;
+        
         return `
             <div class="url-cell">
-                <span class="url-text">${url}</span>
+                ${urlContent}
                 <button class="btn btn-copy" data-url="${url}" data-label="${label}">
                     <i class="fas fa-copy"></i> Copy
                 </button>
