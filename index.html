@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vimeo Video Uploader</title>
+    
+    <!-- CSS Libraries -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1><i class="fas fa-video"></i> Vimeo Video Uploader</h1>
+            <p>Upload videos to Vimeo and manage your library</p>
+        </header>
+
+        <!-- Configuration Section -->
+        <div class="config-section">
+            <h2><i class="fas fa-cog"></i> API Configuration</h2>
+            <div class="config-form">
+                <div class="form-group">
+                    <label for="accessToken">
+                        <i class="fas fa-key"></i> Vimeo Access Token:
+                        <a href="https://developer.vimeo.com/apps" target="_blank" class="help-link">
+                            <i class="fas fa-question-circle"></i> Get Token
+                        </a>
+                    </label>
+                    <input type="password" id="accessToken" placeholder="Enter your Vimeo access token">
+                </div>
+                <button id="saveConfig" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Save Configuration
+                </button>
+            </div>
+        </div>
+
+        <!-- Upload Section -->
+        <div class="upload-section">
+            <h2><i class="fas fa-cloud-upload-alt"></i> Upload Videos</h2>
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-content">
+                    <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                    <p class="upload-text">Drag & Drop videos here</p>
+                    <p class="upload-subtext">or</p>
+                    <button class="btn btn-secondary" id="browseBtn">
+                        <i class="fas fa-folder-open"></i> Browse Files
+                    </button>
+                    <input type="file" id="fileInput" accept="video/*" multiple hidden>
+                    <p class="upload-hint">Supported formats: MP4, MOV, AVI, WMV, FLV, etc.</p>
+                </div>
+            </div>
+
+            <!-- Upload Progress -->
+            <div id="uploadProgress" class="upload-progress-container"></div>
+        </div>
+
+        <!-- Videos Table Section -->
+        <div class="videos-section">
+            <h2><i class="fas fa-list"></i> Uploaded Videos</h2>
+            <div class="table-container">
+                <table id="videosTable" class="display">
+                    <thead>
+                        <tr>
+                            <th>Video Name</th>
+                            <th>File Size</th>
+                            <th>Upload Time</th>
+                            <th>Vimeo URL</th>
+                            <th>Embed URL</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="videosTableBody">
+                        <!-- Dynamic content will be inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2><i class="fas fa-edit"></i> Edit Video Information</h2>
+            <form id="editForm">
+                <div class="form-group">
+                    <label for="editVideoName">Video Name:</label>
+                    <input type="text" id="editVideoName" required>
+                </div>
+                <input type="hidden" id="editVideoId">
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                    <button type="button" class="btn btn-secondary" id="cancelEdit">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>Built with ❤️ for Vimeo Integration | 
+            <a href="https://developer.vimeo.com/api/upload/videos" target="_blank">API Documentation</a>
+        </p>
+    </footer>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script src="js/database.js"></script>
+    <script src="js/vimeo-api.js"></script>
+    <script src="js/uploader.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
