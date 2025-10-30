@@ -2,6 +2,10 @@
 
 A responsive web application for uploading videos to Vimeo with a clean, modern interface. Built with vanilla JavaScript, jQuery, and the Vimeo API.
 
+![Vimeo Video Uploader Interface](https://github.com/user-attachments/assets/ffbda62e-f5b0-44f0-a56a-f79c00a18cdd)
+
+**[📖 Quick Start Guide](QUICKSTART.md)** | **[✨ Features Documentation](FEATURES.md)** | **[🔗 Live Demo](#deployment)**
+
 ## 🎯 Features
 
 ### Core Functionality
