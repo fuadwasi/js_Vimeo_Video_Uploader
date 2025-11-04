@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Vimeo Videos - Vimeo Video Uploader</title>
+    
+    <!-- CSS Libraries -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1><i class="fas fa-video"></i> My Vimeo Videos</h1>
+            <p>Browse and manage all your videos from Vimeo</p>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="navigation">
+            <a href="index.html" class="nav-link">
+                <i class="fas fa-cloud-upload-alt"></i> Upload Videos
+            </a>
+            <a href="videos-list.html" class="nav-link active">
+                <i class="fas fa-list"></i> My Videos
+            </a>
+        </nav>
+
+        <!-- Configuration Section -->
+        <div class="config-section">
+            <h2><i class="fas fa-cog"></i> API Configuration</h2>
+            <div class="config-form">
+                <div class="form-group">
+                    <label for="accessToken">
+                        <i class="fas fa-key"></i> Vimeo Access Token:
+                        <a href="https://developer.vimeo.com/apps" target="_blank" class="help-link">
+                            <i class="fas fa-question-circle"></i> Get Token
+                        </a>
+                    </label>
+                    <input type="password" id="accessToken" placeholder="Enter your Vimeo access token">
+                </div>
+                <button id="saveConfig" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Save Configuration
+                </button>
+            </div>
+        </div>
+
+        <!-- Filters Section -->
+        <div class="filters-section">
+            <h2><i class="fas fa-filter"></i> Filters & Options</h2>
+            <div class="filters-form">
+                <div class="form-group">
+                    <label for="sortBy">Sort By:</label>
+                    <select id="sortBy">
+                        <option value="date">Date</option>
+                        <option value="alphabetical">Alphabetical</option>
+                        <option value="plays">Plays</option>
+                        <option value="likes">Likes</option>
+                        <option value="comments">Comments</option>
+                        <option value="duration">Duration</option>
+                        <option value="modified_time">Modified Time</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="sortDirection">Order:</label>
+                    <select id="sortDirection">
+                        <option value="desc">Newest First</option>
+                        <option value="asc">Oldest First</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="perPage">Videos per page:</label>
+                    <select id="perPage">
+                        <option value="10">10</option>
+                        <option value="25" selected>25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
+                <button id="loadVideos" class="btn btn-primary">
+                    <i class="fas fa-sync-alt"></i> Load Videos
+                </button>
+            </div>
+        </div>
+
+        <!-- Loading Indicator -->
+        <div id="loadingIndicator" class="loading-indicator" style="display: none;">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Loading videos from Vimeo...</p>
+        </div>
+
+        <!-- Videos Statistics -->
+        <div id="videoStats" class="video-stats" style="display: none;">
+            <div class="stat-card">
+                <i class="fas fa-video"></i>
+                <div class="stat-info">
+                    <h3 id="totalVideos">0</h3>
+                    <p>Total Videos</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-eye"></i>
+                <div class="stat-info">
+                    <h3 id="totalPlays">0</h3>
+                    <p>Total Plays</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-heart"></i>
+                <div class="stat-info">
+                    <h3 id="totalLikes">0</h3>
+                    <p>Total Likes</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-comment"></i>
+                <div class="stat-info">
+                    <h3 id="totalComments">0</h3>
+                    <p>Total Comments</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Videos Table Section -->
+        <div class="videos-section">
+            <div class="videos-header">
+                <h2><i class="fas fa-list"></i> Videos from Vimeo</h2>
+                <div class="export-buttons">
+                    <button id="exportExcel" class="btn btn-export" title="Export to Excel/CSV">
+                        <i class="fas fa-file-excel"></i> Export Excel
+                    </button>
+                    <button id="exportJSON" class="btn btn-export" title="Export to JSON">
+                        <i class="fas fa-file-code"></i> Export JSON
+                    </button>
+                </div>
+            </div>
+            <div class="table-container">
+                <table id="videosTable" class="display">
+                    <thead>
+                        <tr>
+                            <th>Thumbnail</th>
+                            <th>Video Name</th>
+                            <th>Duration</th>
+                            <th>Created</th>
+                            <th>Status</th>
+                            <th>Privacy</th>
+                            <th>Plays</th>
+                            <th>Likes</th>
+                            <th>Vimeo URL</th>
+                            <th>Embed URL</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="videosTableBody">
+                        <!-- Dynamic content will be inserted here -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Pagination -->
+            <div id="pagination" class="pagination" style="display: none;">
+                <button id="prevPage" class="btn btn-secondary">
+                    <i class="fas fa-chevron-left"></i> Previous
+                </button>
+                <span id="pageInfo" class="page-info">Page 1 of 1</span>
+                <button id="nextPage" class="btn btn-secondary">
+                    Next <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Video Details Modal -->
+    <div id="detailsModal" class="modal">
+        <div class="modal-content modal-large">
+            <span class="close">&times;</span>
+            <h2><i class="fas fa-info-circle"></i> Video Details</h2>
+            <div id="videoDetailsContent" class="video-details-content">
+                <!-- Video details will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Video Preview Modal -->
+    <div id="previewModal" class="modal">
+        <div class="modal-content modal-large">
+            <span class="close">&times;</span>
+            <h2><i class="fas fa-play-circle"></i> Video Preview</h2>
+            <div id="videoPreviewContainer" class="video-preview-container">
+                <!-- Video iframe will be inserted here -->
+            </div>
+            <div id="videoDetails" class="video-details">
+                <!-- Video details will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>Built with ❤️ for Vimeo Integration | 
+            <a href="https://developer.vimeo.com/api/upload/videos" target="_blank">API Documentation</a>
+        </p>
+    </footer>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script src="js/uploader.js"></script>
+    <script src="js/vimeo-api.js"></script>
+    <script src="js/videos-list.js"></script>
+</body>
+</html>

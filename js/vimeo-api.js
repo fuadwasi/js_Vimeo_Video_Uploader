@@ -261,6 +261,102 @@ const VimeoAPI = (function() {
         }
     }
 
+    /**
+     * Get all videos from the authenticated user's account
+     * @param {number} page - Page number (default: 1)
+     * @param {number} perPage - Number of videos per page (default: 25, max: 100)
+     * @param {string} sort - Sort order: 'date', 'alphabetical', 'plays', 'likes', 'comments', 'duration', 'modified_time'
+     * @param {string} direction - Sort direction: 'asc' or 'desc'
+     */
+    async function getMyVideos(page = 1, perPage = 25, sort = 'date', direction = 'desc') {
+        const token = getAccessToken();
+        if (!token) {
+            throw new Error('Access token not configured');
+        }
+
+        const params = new URLSearchParams({
+            page: page.toString(),
+            per_page: perPage.toString(),
+            sort: sort,
+            direction: direction
+        });
+
+        const response = await fetch(`${VIMEO_API_BASE}/me/videos?${params}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/vnd.vimeo.*+json;version=3.4'
+            }
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.error || `Failed to fetch videos: ${response.status}`);
+        }
+
+        const data = await response.json();
+        
+        // Format the response with useful information
+        return {
+            total: data.total,
+            page: data.page,
+            perPage: data.per_page,
+            totalPages: Math.ceil(data.total / data.per_page),
+            videos: data.data.map(video => ({
+                uri: video.uri,
+                name: video.name,
+                description: video.description,
+                link: video.link,
+                duration: video.duration,
+                width: video.width,
+                height: video.height,
+                createdTime: video.created_time,
+                modifiedTime: video.modified_time,
+                status: video.status,
+                privacy: video.privacy?.view,
+                pictures: video.pictures?.sizes || [],
+                thumbnail: video.pictures?.sizes?.[0]?.link || '',
+                stats: {
+                    plays: video.stats?.plays || 0,
+                    likes: video.metadata?.connections?.likes?.total || 0,
+                    comments: video.metadata?.connections?.comments?.total || 0
+                },
+                embedUrl: generateEmbedUrl(extractVideoId(video.link)),
+                videoId: extractVideoId(video.link)
+            }))
+        };
+    }
+
+    /**
+     * Search videos in the authenticated user's account
+     */
+    async function searchMyVideos(query, page = 1, perPage = 25) {
+        const token = getAccessToken();
+        if (!token) {
+            throw new Error('Access token not configured');
+        }
+
+        const params = new URLSearchParams({
+            query: query,
+            page: page.toString(),
+            per_page: perPage.toString()
+        });
+
+        const response = await fetch(`${VIMEO_API_BASE}/me/videos?${params}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/vnd.vimeo.*+json;version=3.4'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Failed to search videos: ${response.status}`);
+        }
+
+        return await response.json();
+    }
+
     // Public API
     return {
         setAccessToken,
@@ -272,6 +368,8 @@ const VimeoAPI = (function() {
         getVideoInfo,
         updateVideoMetadata,
         deleteVideo,
-        validateToken
+        validateToken,
+        getMyVideos,
+        searchMyVideos
     };
 })();
